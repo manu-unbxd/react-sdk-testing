@@ -29,7 +29,7 @@ import MobileModal from '../components/MobileModal';
 import MobileMenu from '../components/MobileMenu';
 
 const getUrlParamsMapped = (urlObj) => {
-  const urlMap = ['q', 'rows', 'start', 'viewType', 'filter', 'sort'];
+  const urlMap = ['q', 'rows', 'start', 'viewType'];
   let newObj = {};
   urlMap.forEach((key) => {
     if (urlObj[key]) {
