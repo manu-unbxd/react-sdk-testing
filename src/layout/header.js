@@ -14,7 +14,7 @@ export default function Header() {
   let navigate = useNavigate();
   return (
     <div className="header-main">
-      <Link to="/">ecommerce</Link>
+      <Link to="/">unbxd</Link>
       <nav>
         <Link to="/category/shirt">Shirt</Link> |{' '}
         <Link to="/category/pants">Pants</Link>
