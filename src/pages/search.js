@@ -59,15 +59,21 @@ export default function Search() {
     const { responseObj = {} } = state;
     const { redirect = {} } = responseObj;
     const { type = '', value } = redirect;
-    let urlParams = getUrlParamsMapped(searchObj.getQueryParams());
-    let newParams = getUrlParamsMapped(searchObj.getQueryParams(hash));
+    let urlParams = searchObj.getQueryParams();
+    let newParams = searchObj.getQueryParams(hash);
     if (!isEqual(urlParams, newParams)) {
+      if (routeHistory.action === 'POP') {
+        routeHistory(`/search?${hash}`,{replace:true});
+      } else {
+        routeHistory(`/search?${hash}`);
+      }
+      /*
       if (routeHistory.action === 'POP') {
         console.log('back');
       } else {
         console.log('new');
         setSearchParams(newParams);
-      }
+      }*/
     }
     return false;
   };
