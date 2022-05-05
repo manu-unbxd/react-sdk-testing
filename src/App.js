@@ -1,85 +1,41 @@
-import React,{useState} from 'react';
-import unbxdSearchConfig from './unbxd-search.config.json';
-import UnbxdSearchWrapper from './@unbxd-ui/react-search-sdk/';
-import SearchBar from './components/SearchBar';
-import ProductsListing from './components/ProductsListing';
-
-import SpellChecker from './components/SpellChecker';
-import Paginator from './components/Paginator';
-import Sorter from './components/Sorter';
-import MerchandizingBanner from './components/MerchandizingBanner';
-import TextFilters from './components/TextFilters';
-import RangeFilters from './components/RangeFilters';
-import MultilevelFilters from './components/MultilevelFilters';
-import ActiveFilters from './components/ActiveFilters';
-import Crumbs from './components/Crumbs';
-import SearchDescription from './components/SearchDescription';
-import ProductViewTypes from './components/ProductViewTypes';
-import ProductsSize from './components/ProductsSize';
-import FacetApplyClear from './components/FacetApplyClear';
-import MobileModal from './components/MobileModal';
-import MobileMenu from './components/MobileMenu';
-
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { AppProvider } from './context/context.js';
+import ErrorBoundary from './components/ErrorBoundary.js';
+import Header from './layout/header.js';
+import Home from './pages/home.js';
+import Search from './pages/search.js';
+import Category from './pages/category.js';
+import './style.css';
 import './@unbxd-ui/react-search-sdk/public/dist/css/core.css';
 import './@unbxd-ui/react-search-sdk/public/dist/css/theme.css';
-import './style.css';
+import Header from './layout/header.js';
+const AppWrapper = () => {
+  const location = useLocation();
+  console.log(location, 'location');
+  return (
+    <TransitionGroup component={null}>
+      <CSSTransition key={location.pathname} classNames="fade" timeout={300}>
+        <Routes location={location}>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/search" element={<Search />} />
+          <Route path="/category/:categoryType" element={<Category />} />
+        </Routes>
+      </CSSTransition>
+    </TransitionGroup>
+  );
+};
 
 export default function App() {
-  console.log(UnbxdSearchWrapper, 'UnbxdSearchWrapper');
-  const [showFilters, setShowFilters] = useState(false);
-    const handleClose = () => setShowFilters(false);
-    const handleShow = () => setShowFilters(true); 
-  const searchConfigurations = {
-    updateUrls: false,
-  };
   return (
-    <div>
-      <UnbxdSearchWrapper
-        siteKey={unbxdSearchConfig.siteKey}
-        apiKey={unbxdSearchConfig.apiKey}
-        searchConfigurations={searchConfigurations}
-        onRouteChange={(searchObj, hash, refreshId) => {
-          console.log(searchObj, hash, refreshId);
-        }}
-      >
-        <MobileModal showFilters={showFilters} handleClose={handleClose} />
-            <SearchBar />
-
-            <MobileMenu handleShow={handleShow} />
-
-            <div className="UNX-search__container">
-                <div className="UNX-searchMeta__container">
-                    <Crumbs />
-                    <div className="UNX-searchMeta__more">
-                        <ActiveFilters />
-                        <ProductViewTypes />
-                    </div>
-                </div>
-                <div className="UNX-searchResults__container">
-                    <div className="UNX-searchFacet__container">
-                        <MultilevelFilters />
-                        <RangeFilters />
-                        <TextFilters />
-                    </div>
-
-                    <div className="UNX-searchResult__container">
-                        <MerchandizingBanner />
-                        <SearchDescription />
-                        <SpellChecker />
-
-                        <div className="UNX-searchHeader__container">
-                            <Sorter />
-                            <ProductsSize />
-                            <Paginator />
-                        </div>
-
-                        <ProductsListing />
-
-                        <Paginator />
-                    </div>
-                </div>
-            </div>
-      </UnbxdSearchWrapper>
-    </div>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AppProvider>
+          <Header />
+          <AppWrapper />
+        </AppProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
