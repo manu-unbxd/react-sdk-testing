@@ -1,12 +1,8 @@
-import React, { useState, useContext } from 'react';
-import {
-  Route,
-  useNavigate,
-  useLocation,
-  useSearchParams,
-} from 'react-router-dom';
-import isEqual from 'lodash.isequal';
+import React, { useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/context.js';
+import isEqual from 'lodash.isequal';
+import CircularProgress from '@mui/material/CircularProgress';
 import unbxdSearchConfig from '../unbxd-search.config.json';
 import UnbxdSearchWrapper from '../@unbxd-ui/react-search-sdk/';
 import SearchBar from '../components/SearchBar';
@@ -28,23 +24,9 @@ import FacetApplyClear from '../components/FacetApplyClear';
 import MobileModal from '../components/MobileModal';
 import MobileMenu from '../components/MobileMenu';
 
-const getUrlParamsMapped = (urlObj) => {
-  const urlMap = ['q', 'rows', 'start', 'viewType'];
-  let newObj = {};
-  urlMap.forEach((key) => {
-    if (urlObj[key]) {
-      newObj[key] = urlObj[key];
-    }
-  });
-  return newObj;
-};
-
 export default function Search() {
-  const { state, dispatch } = useContext(AppContext);
   const routeHistory = useNavigate();
-  const routeLocation = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const currentParams = Object.fromEntries([...searchParams]);
+  const { state, dispatch } = useContext(AppContext);
   const [showFilters, setShowFilters] = useState(false);
   const handleClose = () => setShowFilters(false);
   const handleShow = () => setShowFilters(true);
@@ -53,6 +35,7 @@ export default function Search() {
     searchQueryParam: 'q',
     hashMode: false,
   };
+  console.log(state, 'state');
 
   const handleRouteChange = (searchObj, hash, refreshId) => {
     const { state = {} } = searchObj;
@@ -63,27 +46,28 @@ export default function Search() {
     let newParams = searchObj.getQueryParams(hash);
     if (!isEqual(urlParams, newParams)) {
       if (routeHistory.action === 'POP') {
-        routeHistory(`/search?${hash}`,{replace:true});
+        routeHistory(`/search?${hash}`, { replace: true });
       } else {
         routeHistory(`/search?${hash}`);
       }
-      /*
-      if (routeHistory.action === 'POP') {
-        console.log('back');
-      } else {
-        console.log('new');
-        setSearchParams(newParams);
-      }*/
     }
     return false;
   };
+  const onProductClick = (product) => {
+    routeHistory(`/product/${product.uniqueId}`);
+  };
+  const { refreshId } = state;
   return (
     <div>
       <UnbxdSearchWrapper
+        key={refreshId}
+        loaderComponent={<CircularProgress />}
         siteKey={unbxdSearchConfig.siteKey}
         apiKey={unbxdSearchConfig.apiKey}
+        refreshId={refreshId}
         searchConfigurations={searchConfigurations}
         onRouteChange={handleRouteChange}
+        productType={'SEARCH'}
       >
         <MobileModal showFilters={showFilters} handleClose={handleClose} />
 
@@ -115,7 +99,7 @@ export default function Search() {
                 <Paginator />
               </div>
 
-              <ProductsListing />
+              <ProductsListing onProductClick={onProductClick} />
 
               <Paginator />
             </div>

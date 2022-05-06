@@ -26,6 +26,7 @@ function reducer(state, action) {
         type: SEARCH,
         categoryType: '',
         searchTerm: action.searchTerm,
+        refreshId: state.refreshId++,
       };
     }
     default: {
@@ -42,6 +43,7 @@ function AppProvider({ children }) {
       window.location.pathname.indexOf('/category') === 0 ? CATEGORY : SEARCH,
     searchTerm: query || '',
     categoryType: '',
+    refreshId: 0,
   });
   const value = { state, dispatch };
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

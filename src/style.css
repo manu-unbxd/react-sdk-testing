@@ -1,3 +1,8 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
 h1,
 p {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
@@ -27,4 +32,22 @@ p {
   opacity: 0;
   transform: translate(0, 20px);
   transition: opacity 150ms ease, transform 50ms ease;
+}
+.MuiCircularProgress-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+}
+.header-nav-links {
+  margin: 0px 6px;
+}
+.logo-text {
+  margin-right: 100px;
+}
+.UNX-search__container,
+.product-wrapper {
+  padding-top: 24px;
 }
