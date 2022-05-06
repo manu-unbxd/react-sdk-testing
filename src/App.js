@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import { AppProvider } from './context/context.js';
 import ErrorBoundary from './components/ErrorBoundary.js';
-import Header from './layout/header.js';
 import Home from './pages/home.js';
 import Search from './pages/search.js';
 import Category from './pages/category.js';
@@ -15,7 +14,6 @@ import Header from './layout/header.js';
 import Container from '@mui/material/Container';
 const AppWrapper = () => {
   const location = useLocation();
-  console.log(location, 'location');
   return (
     <TransitionGroup component={null}>
       <CSSTransition key={location.pathname} classNames="fade" timeout={300}>
